@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { settingsStore, getDefaultSources, type SortOption, type SearchDisplayMode } from '@/lib/store/settings-store';
+import { settingsStore, getDefaultSources, type SortOption, type SearchDisplayMode, type ProxyMode } from '@/lib/store/settings-store';
 import type { VideoSource, SourceSubscription } from '@/lib/types';
 import {
     type ImportResult,
@@ -27,6 +27,7 @@ export function useSettingsPage() {
     const [realtimeLatency, setRealtimeLatency] = useState(false);
     const [searchDisplayMode, setSearchDisplayMode] = useState<SearchDisplayMode>('normal');
     const [fullscreenType, setFullscreenType] = useState<'native' | 'window'>('native');
+    const [proxyMode, setProxyMode] = useState<ProxyMode>('retry');
 
     useEffect(() => {
         const settings = settingsStore.getSettings();
@@ -38,6 +39,7 @@ export function useSettingsPage() {
         setRealtimeLatency(settings.realtimeLatency);
         setSearchDisplayMode(settings.searchDisplayMode);
         setFullscreenType(settings.fullscreenType);
+        setProxyMode(settings.proxyMode);
 
         // Fetch env password status
         fetch('/api/config')
@@ -290,6 +292,15 @@ export function useSettingsPage() {
         });
     };
 
+    const handleProxyModeChange = (mode: ProxyMode) => {
+        setProxyMode(mode);
+        const currentSettings = settingsStore.getSettings();
+        settingsStore.saveSettings({
+            ...currentSettings,
+            proxyMode: mode,
+        });
+    };
+
     const handleRestoreDefaults = () => {
         const defaults = getDefaultSources();
         handleSourcesChange(defaults);
@@ -342,5 +353,7 @@ export function useSettingsPage() {
         handleSearchDisplayModeChange,
         fullscreenType,
         handleFullscreenTypeChange,
+        proxyMode,
+        handleProxyModeChange,
     };
 }

@@ -55,6 +55,8 @@ export default function SettingsPage() {
     handleRealtimeLatencyChange,
     handleSearchDisplayModeChange,
     handleFullscreenTypeChange,
+    proxyMode,
+    handleProxyModeChange,
   } = useSettingsPage();
 
   return (
@@ -67,6 +69,8 @@ export default function SettingsPage() {
         <PlayerSettings
           fullscreenType={fullscreenType}
           onFullscreenTypeChange={handleFullscreenTypeChange}
+          proxyMode={proxyMode}
+          onProxyModeChange={handleProxyModeChange}
         />
 
         {/* Password Settings */}
